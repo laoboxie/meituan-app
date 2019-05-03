@@ -1,0 +1,13 @@
+$main_c: #2bb8aa;
+$font_c: #333;
+$font_c_l: #999;
+$border_c: #EEE;
+
+$page_min_width: 1100px;
+$cont_width: 1000px;
+
+@mixin cont_layout{
+  width: $cont_width;
+  margin: 0 auto;
+}
+
