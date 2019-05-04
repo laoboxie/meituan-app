@@ -2,7 +2,7 @@
   <div class="register_page">
     <el-header class="header">
       <div class="header_cont">
-        <div class="logo" />
+        <nuxt-link :to="{name:'index'}"><div class="logo" /></nuxt-link>
         <div class="login">
           <p>已有美团账号？</p>
           <nuxt-link to="login">
@@ -22,7 +22,7 @@
           <el-input v-model="form.email" size="small"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button @click="sendCode">免费获取邮箱动态码</el-button>
+          <el-button @click="sendCode" :disabled="btnDisable">{{btnTxt}}</el-button>
         </el-form-item>
         <el-form-item label="邮箱动态码" prop="code">
           <el-input v-model="form.code" size="small"></el-input>
@@ -34,7 +34,7 @@
           <el-input type="password" v-model="form.cpassword" size="small"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" size="nomarl">同意以下协议并注册</el-button>
+          <el-button type="primary" size="nomarl" @click="register">同意以下协议并注册</el-button>
         </el-form-item>
         <el-form-item>
           <a class="protocol" href="https://www.meituan.com/about/terms" target="_blank">《美团网用户协议》</a>
@@ -48,20 +48,24 @@
 </template>
 
 <script>
-import http from '@/assets/api/index.js'
 import api from '@/assets/api/apiList'
+const timeGap = 30
+let timer = null
 export default {
   layout: 'blank',
-  data: () => {
-    let validatorCpassword = (rule, value, callback) => {
-      if (value !== this.form.password) {
+  data(){
+    var checkCpassword = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'));
+      } else if (value !== this.form.password) {
         callback(new Error('两次输入密码不一致!'));
       } else {
         callback();
       }
-    }
+    };
     return {
       form: {
+        username: '',
         email: '',
         code: '',
         password: '',
@@ -70,44 +74,100 @@ export default {
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 4, max: 20, message: '长度在4到20个字符', trigger: 'blur' }
         ],
         email: [
           { required: true, message: '请输入邮箱', trigger: 'blur' },
           { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
         ],
         code: [
-          { required: true, message: '请输入邮箱动态码', trigger: 'blur' }
+          { required: true, message: '请输入邮箱动态码', trigger: 'blur' },
+          { min: 4, max: 20, message: '长度在4到20个字符', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' }
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 4, max: 20, message: '长度在4到20个字符', trigger: 'blur' }
         ],
         cpassword: [
           { required: true, message: '请输入确认密码', trigger: 'blur' },
-          // {
-          //   validator: validatorCpassword,
-          //   trigger: 'blur'
-          // }
+          {
+            validator: checkCpassword,
+            trigger: 'blur'
+          }
         ],         
       },
+      timeLeft: timeGap,
+      btnTxt: "免费获取邮箱动态码",
+      btnDisable: false,
     }
+  },
+  watch: {
+    timeLeft: function(newVal){
+      if(newVal===timeGap){
+        this.btnTxt = "免费获取邮箱动态码"
+        this.btnDisable = false
+      }else{
+        this.btnTxt = `${newVal}s后重试`
+        this.btnDisable = true
+      }
+    }
+  },
+  computed: {
   },
   methods: {
     sendCode(){
-      console.log(this.$http)
-      let self = this
       this.$refs.form.validateField('email', (valid)=>{
         if(!valid){
-          self.$http(api.verify, {
+          this.$http(api.verify, {
             email: this.form.email
           }).then(res=>{
-            console.log(res,'res')
+            let data = this.$get(res, 'data', {})
+            console.log(data)
+            if(data.code===0){
+              this.$message.success(data.msg)
+              this.timeLeft--
+              clearInterval(timer)
+              timer = setInterval(()=>{
+                this.timeLeft--
+                if(this.timeLeft<=0){
+                  this.timeLeft = timeGap
+                  clearInterval(timer)
+                }
+              }, 1000)
+            }else{
+              this.$message.error(data.msg)
+            }
+          }).catch(err=>{
+            console.log('errrrrr',err)
           })
         }
       })
+    },
+    register(){
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.$http(api.signup, {
+            username: this.form.username,
+            email: this.form.email,
+            code: this.form.code,
+            password: this.form.password,
+          }).then(res=>{
+            let data = this.$get(res, 'data', {})
+            if(data.code===0){
+              this.$message.success(data.msg || '注册成功')
+              this.$router.push({
+                name: 'login'
+              })
+            }else{
+              this.$message.error(data.msg || '注册失败')
+            }
+          })
+        }
+      });
     }
   },
   mounted(){
-
+    
   }
 }
 </script>
@@ -117,6 +177,7 @@ export default {
 .register_page{
   .header{
     border-bottom: 2px solid #2bb8aa;
+    width: 100%;
     .header_cont{
       @include cont_layout;
       height: 100%;

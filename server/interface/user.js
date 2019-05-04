@@ -115,10 +115,6 @@ router.post('/signup', async (ctx)=>{
       ctx.body = {
         code: 0,
         msg: '注册成功',
-        data: {
-          username: res.username,
-          email: res.email
-        }
       }
     }).catch(err=>{
       ctx.body = {
@@ -154,7 +150,11 @@ router.post('/signin', async (ctx, next)=>{
     }else{
       ctx.body = {
         code: 0,
-        msg: '登录成功'
+        msg: '登录成功',
+        data: {
+          username: user.username,
+          email: user.email,
+        }
       }
       return ctx.login(user)
     }

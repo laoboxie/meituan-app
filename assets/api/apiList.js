@@ -3,6 +3,14 @@ const serviceModule = {
     url: "/user/verify",
     method: "post"
   },
+  signup: {
+    url: "/user/signup",
+    method: "post"
+  },
+  signin: {
+    url: 'user/signin',
+    method: 'post'
+  }
 
 };
 

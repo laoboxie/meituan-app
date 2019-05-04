@@ -1,7 +1,7 @@
 <template>
   <div class="login_page">
     <el-header class="header">
-      <div class="logo"></div>
+      <nuxt-link :to="{name:'index'}"><div class="logo"></div></nuxt-link>
     </el-header>
     <el-main class="main">
       <el-row>
@@ -11,9 +11,9 @@
         <el-col :span="12">
           <div class="mainCont">
             <h4>帐号登录</h4>
-            <el-input class="input" size="normal" v-model="account" placeholder="邮箱"></el-input>
+            <el-input class="input" size="normal" v-model="username" placeholder="邮箱"></el-input>
             <el-input class="input" size="normal" type="password" v-model="password" placeholder="密码"></el-input>
-            <el-button class="btn" size="normal" type="primary">登 录</el-button>
+            <el-button class="btn" size="normal" type="primary" @click="login">登 录</el-button>
             <p class="register">
               还没有帐号？
               <nuxt-link class="link" :to="{name: 'register'}">免费注册</nuxt-link>
@@ -29,12 +29,30 @@
 </template>
 
 <script>
+import api from '@/assets/api/apiList'
 export default {
   layout: 'blank',
-  data: () => {
+  data(){
     return {
-      account: '',
+      username: '',
       password: ''
+    }
+  },
+  methods: {
+    login(){
+      this.$http(api.signin, {
+        username: this.username,
+        password: this.password
+      }).then(res=>{
+        let data = this.$get(res, 'data', {})
+        if(data.code===0){
+          this.$router.push({
+            name: 'index'
+          })
+        }else{
+          this.$message.error(data.msg || '帐号/密码错误')
+        }
+      })
     }
   }
 }
