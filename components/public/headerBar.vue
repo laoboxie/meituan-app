@@ -4,11 +4,11 @@
     <div class="left">
       <div class="location">
         <i class="el-icon-location"></i>
-        <span>深圳</span>
+        <span>{{this.city || '--'}}</span>
         <el-button class="changBtn">切换城市</el-button>
       </div>
       <div class="user">
-        <div v-if="true">
+        <div v-if="!this.username">
           <nuxt-link :to="{name: 'login'}">
             <el-button type="text">立即登录</el-button>
           </nuxt-link>
@@ -17,8 +17,8 @@
           </nuxt-link>          
         </div>
         <div v-else>
-          <span>老伯，</span>
-          <el-button type="text">退出</el-button>
+          <span>{{this.username}}，</span>
+          <el-button type="text" @click="longout">退出</el-button>
         </div>
       </div>      
     </div>
@@ -31,27 +31,44 @@
 
 <script>
 import api from '@/assets/api/apiList'
+import {mapGetters} from 'vuex'
 export default {
   data(){
     return {
+      city: '',
     }
   },
+  computed: {
+    ...mapGetters(['username']),
+  },
   methods: {
-    login(){
-      this.$http(api.signin, {
-        username: this.username,
-        password: this.password
-      }).then(res=>{
+    longout(){
+      this.$http(api.logout).then(res=>{
         let data = this.$get(res, 'data', {})
         if(data.code===0){
-          this.$router.push({
-            name: 'index'
-          })
+          // this.$router.replace({
+          //   name: 'index'
+          // })
+          // window.location.replace(window.location.href)
         }else{
-          this.$message.error(data.msg || '帐号/密码错误')
+          this.$message.error(data.msg || '退出失败')
+        }
+      })      
+    },
+    getLocation(){
+      this.$http(api.getLocation).then(res=>{
+        if(res.status===200 && res.data.city){
+          this.city = res.data.city.replace('市', '')
+          this.$store.commit('setUserValue', {
+            key: 'city',
+            value: this.city
+          })
         }
       })
     }
+  },
+  mounted(){
+    this.getLocation()
   }
 }
 </script>

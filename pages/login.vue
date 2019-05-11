@@ -12,7 +12,7 @@
           <div class="mainCont">
             <h4>帐号登录</h4>
             <el-input class="input" size="normal" v-model="username" placeholder="邮箱"></el-input>
-            <el-input class="input" size="normal" type="password" v-model="password" placeholder="密码"></el-input>
+            <el-input class="input" size="normal" type="password" v-model="password" placeholder="密码" @keyup.enter.native="login"></el-input>
             <el-button class="btn" size="normal" type="primary" @click="login">登 录</el-button>
             <p class="register">
               还没有帐号？
@@ -46,6 +46,10 @@ export default {
       }).then(res=>{
         let data = this.$get(res, 'data', {})
         if(data.code===0){
+          this.$store.commit('setUser', {
+            username: data.data.username,
+            email: data.data.email
+          })
           this.$router.push({
             name: 'index'
           })

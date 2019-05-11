@@ -6,3 +6,8 @@ export const smtp = {
   user: '594502135@qq.com',
   pass: 'vodbjgadzpgabbeb'
 }
+
+export const local = {
+  host: process.env.HOST || '127.0.0.1',
+  port: process.env.PORT || 3100
+}

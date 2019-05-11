@@ -1,8 +1,20 @@
 <template>
   <div>
+    <mt-header></mt-header>
     <nuxt />
   </div>
 </template>
+
+<script>
+import mtHeader from '../components/public/mtHeader'
+
+export default {
+  components: {
+    mtHeader
+  }
+}
+</script>
+
 
 <style lang="scss">
 @import '@/assets/css/common.scss';

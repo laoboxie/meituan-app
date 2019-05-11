@@ -6,8 +6,8 @@ import {getRandomCode, getExpire, checkIsExpired, emailTransporter} from "../uti
 import {VERIFY_CODE} from "../utils/const"
 import {smtp} from "../config"
 
-let router = new Router({prefix: '/user'})
 import redis from '../utils/redis'
+let router = new Router({prefix: '/user'})
 const timeGap = 1000*60*1000
 
 
@@ -165,6 +165,11 @@ router.post('/signin', async (ctx, next)=>{
 router.post('/logout', async (ctx)=>{
   await ctx.logout()
   if(ctx.isUnauthenticated()){
+    // ctx.cookies.set('meituan555', '', {
+    //   path: '/',
+    //   httpOnly: true,
+    //   maxAge: 0
+    // })
     ctx.body = {
       code: 0,
       msg: '退出成功'

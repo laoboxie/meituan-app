@@ -9,8 +9,9 @@ import Redis from 'koa-redis'
 import mongoose from 'mongoose'
 
 import passport from './utils/passport'
-import {db} from './config'
+import {db, local} from './config'
 import userRouter from './interface/user'
+import searchRouter from './interface/search'
 
 const app = new Koa()
 
@@ -43,10 +44,8 @@ async function start() {
   // Instantiate nuxt.js
   const nuxt = new Nuxt(config)
 
-  const {
-    host = process.env.HOST || '127.0.0.1',
-    port = process.env.PORT || 3000
-  } = nuxt.options.server
+  const host = local.host
+  const port = local.port
 
   // Build in development
   if (config.dev) {
@@ -58,6 +57,8 @@ async function start() {
 
   //路由处理
   app.use(userRouter.routes()).use(userRouter.allowedMethods())
+  app.use(searchRouter.routes()).use(searchRouter.allowedMethods())
+
   app.use((ctx) => {
     ctx.status = 200
     ctx.respond = false // Bypass Koa's built-in response handling

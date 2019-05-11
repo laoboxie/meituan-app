@@ -12,3 +12,10 @@ $cont_width: 1000px;
   margin: 0 auto;
 }
 
+@mixin section_box {
+  border: 1px solid $border_c;
+  border-radius: 4px;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #fff;
+}

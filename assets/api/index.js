@@ -1,8 +1,9 @@
 import AXIOS from "axios";
 import qs from "qs";
 import {merge} from "@/assets/js/lodash"
+import {local} from '../../server/config.js'
 const axios = AXIOS.create({
-  baseURL: 'http://localhost:3000'
+  baseURL: `//${local.host}:${local.port}`
 });
 
 // 请求前的拦截器
