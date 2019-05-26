@@ -56,6 +56,7 @@ export default {
   .cont{
     @include cont_layout;
     @include section_box;
+    
     .item{
       border-bottom: 1px solid $border_c;
       &:last-of-type{

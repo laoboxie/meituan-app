@@ -1,9 +1,11 @@
 <template>
 <div class="headerSearch">
   <div class="cont">
-    <div class="logo">
-      <img src="https://s0.meituan.net/bs/fe-web-meituan/e5eeaef/img/logo.png" alt="">
-    </div>
+    <nuxt-link :to="{name:'index'}">
+      <div class="logo">
+        <img src="https://s0.meituan.net/bs/fe-web-meituan/e5eeaef/img/logo.png" alt="">
+      </div>
+    </nuxt-link>
     <div class="search">
       <el-input placeholder="搜索商家或地点" v-model="searchCont" size="normal" @input="handleChange" @focus="handleFocus" @blur="handleBlur">
         <el-button slot="append" icon="el-icon-search" class="searchBtn"></el-button>
@@ -94,6 +96,7 @@ export default {
     .search{
       width: 422px;
       flex-shrink: 0;
+      position: relative;
       .el-input-group__append{
         background-color: $main_c;
       }
@@ -103,6 +106,7 @@ export default {
         // font-weight: bold;
       }
       .result{
+        position: absolute;
         padding: 0;
         margin: 0;
         list-style: none;

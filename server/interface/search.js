@@ -66,4 +66,34 @@ router.get('/results', async (ctx, next)=>{
   }
 })
 
+//商品详情
+router.get('/products', async (ctx, next)=>{
+  try{
+    let {city, name} = ctx.query
+    let res = await request.get('http://cp-tools.cn/search/products', {
+      params: {
+        sign,
+        city,
+        keyword: name
+      }
+    })
+    if(res.status===200){
+      ctx.body = {
+        code: 0,
+        data: {
+          product: res.data.product,
+          more: res.data.more
+        }
+      }
+    }else{
+      ctx.body = {
+        code: -1,
+        msg: '未知错误'
+      }
+    }
+  }catch(err){
+    console.log(err)
+  }
+})
+
 export default router

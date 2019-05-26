@@ -10,8 +10,11 @@ import mongoose from 'mongoose'
 
 import passport from './utils/passport'
 import {db, local} from './config'
+import geoRouter from './interface/geo'
 import userRouter from './interface/user'
 import searchRouter from './interface/search'
+import RegionRouter from './interface/region'
+import CartRouter from './interface/cart'
 
 const app = new Koa()
 
@@ -56,8 +59,11 @@ async function start() {
   }
 
   //路由处理
+  app.use(geoRouter.routes()).use(geoRouter.allowedMethods())
   app.use(userRouter.routes()).use(userRouter.allowedMethods())
   app.use(searchRouter.routes()).use(searchRouter.allowedMethods())
+  app.use(RegionRouter.routes()).use(RegionRouter.allowedMethods())
+  app.use(CartRouter.routes()).use(CartRouter.allowedMethods())
 
   app.use((ctx) => {
     ctx.status = 200

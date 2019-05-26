@@ -16,6 +16,9 @@ export default {
     },
     city(state){
       return state.city
+    },
+    isLogin(state){
+      return Boolean(state.username)
     }
   },
   mutations: {

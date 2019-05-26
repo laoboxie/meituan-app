@@ -1,9 +1,9 @@
 import Router from 'koa-router'
 import request from '../utils/request'
-import sign from '~/assets/js/sign'
+import sign from '../../assets/js/sign'
+
 
 let router = new Router({prefix: '/geo'})
-import redis from '../utils/redis'
 
 //获取位置
 router.get('/getLocation', async (ctx, next)=>{

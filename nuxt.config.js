@@ -1,4 +1,5 @@
 const pkg = require('./package')
+import {local} from './server/config'
 
 module.exports = {
   mode: 'universal',
@@ -51,6 +52,8 @@ module.exports = {
   ** Axios module configuration
   */
   axios: {
+    baseURL: `http://${local.host}:${local.port}`,
+    timeout: 2000,
     // See https://github.com/nuxt-community/axios-module#options
   },
 

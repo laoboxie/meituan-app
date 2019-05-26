@@ -4,11 +4,11 @@
     <div class="left">
       <div class="location">
         <i class="el-icon-location"></i>
-        <span>{{this.city || '--'}}</span>
+        <span>{{city || '--'}}</span>
         <el-button class="changBtn">切换城市</el-button>
       </div>
       <div class="user">
-        <div v-if="!this.username">
+        <div v-if="!username">
           <nuxt-link :to="{name: 'login'}">
             <el-button type="text">立即登录</el-button>
           </nuxt-link>
@@ -17,7 +17,7 @@
           </nuxt-link>          
         </div>
         <div v-else>
-          <span>{{this.username}}，</span>
+          <span>{{username}}，</span>
           <el-button type="text" @click="longout">退出</el-button>
         </div>
       </div>      
@@ -35,21 +35,20 @@ import {mapGetters} from 'vuex'
 export default {
   data(){
     return {
-      city: '',
     }
   },
   computed: {
-    ...mapGetters(['username']),
+    ...mapGetters(['username', 'city']),
   },
   methods: {
     longout(){
       this.$http(api.logout).then(res=>{
         let data = this.$get(res, 'data', {})
         if(data.code===0){
-          // this.$router.replace({
-          //   name: 'index'
-          // })
-          // window.location.replace(window.location.href)
+          this.$router.replace({
+            name: 'index'
+          })
+          window.location.reload()
         }else{
           this.$message.error(data.msg || '退出失败')
         }
@@ -68,7 +67,7 @@ export default {
     }
   },
   mounted(){
-    this.getLocation()
+    // this.getLocation()
   }
 }
 </script>

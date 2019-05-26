@@ -33,6 +33,16 @@ const serviceModule = {
     url: `/search/results`,
     method: 'get',
   },
+
+  // cart
+  addCart: {
+    url: '/cart/add',
+    method: 'post',
+    headers: {
+      "content-type": 'application/json'
+    }
+  },
+
 };
 
 export default serviceModule;
