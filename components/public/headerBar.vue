@@ -23,7 +23,9 @@
       </div>      
     </div>
     <div class="right">
-      我的美团
+      <nuxt-link :to="{name: 'order'}" v-if="username">
+        <el-button>我的订单</el-button>
+      </nuxt-link>
     </div>
   </div>
 </div>

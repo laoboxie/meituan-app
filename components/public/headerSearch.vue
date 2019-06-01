@@ -7,11 +7,12 @@
       </div>
     </nuxt-link>
     <div class="search">
-      <el-input placeholder="搜索商家或地点" v-model="searchCont" size="normal" @input="handleChange" @focus="handleFocus" @blur="handleBlur">
-        <el-button slot="append" icon="el-icon-search" class="searchBtn"></el-button>
+      <el-input placeholder="搜索商家或地点" v-model="searchCont" size="normal" 
+        @input="handleChange" @focus="handleFocus" @blur="handleBlur" @keyup.enter.native="search">
+        <el-button slot="append" icon="el-icon-search" class="searchBtn" @click="search"></el-button>
       </el-input>
       <ul class="result" v-show="focus && searchResult.length">
-        <li v-for="(item, index) in searchResult" :key="index">{{item.name}}</li>
+        <li v-for="(item, index) in searchResult" :key="index" @click="goDetail(item)">{{item.name}}</li>
       </ul>
       <!-- <div class="hotSearch">4546</div> -->
     </div>
@@ -35,21 +36,6 @@ export default {
     ...mapGetters(['city']),
   },
   methods: {
-    login(){
-      this.$http(api.signin, {
-        username: this.username,
-        password: this.password
-      }).then(res=>{
-        let data = this.$get(res, 'data', {})
-        if(data.code===0){
-          this.$router.push({
-            name: 'index'
-          })
-        }else{
-          this.$message.error(data.msg || '帐号/密码错误')
-        }
-      })
-    },
     handleChange: debounce(async function(value){
       if(!value){
         this.searchResult = []
@@ -71,6 +57,25 @@ export default {
       setTimeout(()=>{
         this.focus = false
       }, 200)
+    },
+    search(){
+      let {href} = this.$router.resolve({
+        name: 'products',
+        query: {
+          keyword: this.searchCont,
+        }
+      })
+      window.location.href = href
+    },
+    goDetail(item){
+      let {href} = this.$router.resolve({
+        name: 'pDetail',
+        query: {
+          name: item.name,
+          type: item.type,
+        }
+      })
+      window.location.href = href
     }
   }
 }
@@ -113,6 +118,8 @@ export default {
         width: 355px;
         box-sizing: border-box;
         border: 1px solid $border_c;
+        background: #fff;
+        z-index: 100;
         li{
           line-height: 30px;
           cursor: pointer;

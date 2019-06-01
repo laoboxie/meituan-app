@@ -57,6 +57,7 @@ export default {
           products: [{
             name: product.name,
             price: product.price,
+            image: this.$get(product, 'photos[0].url', "")
           }]
         }).then(res=>{
           let data = this.$get(res, 'data', {})

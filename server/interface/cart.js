@@ -43,6 +43,13 @@ router.get('/:id', async (ctx, next)=>{
   try{
     if(ctx.isAuthenticated()){
       const {id} = ctx.params
+      if(!id){
+        ctx.body = {
+          code: -1,
+          msg: '请根据ID查询购物车'
+        }
+        return false
+      }
       let user = ctx.session.passport.user
       let cart = await Cart.findById(id)
       if(user._id === cart.user){

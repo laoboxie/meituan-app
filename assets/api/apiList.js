@@ -43,6 +43,15 @@ const serviceModule = {
     }
   },
 
+  // order
+  addOrder: {
+    url: '/order/add',
+    method: 'post',
+    headers: {
+      "content-type": 'application/json'
+    }
+  },
+
 };
 
 export default serviceModule;

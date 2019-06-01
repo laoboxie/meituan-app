@@ -18,7 +18,7 @@
       <p class="total">应付金额：￥{{total}}</p>
       <p class="receive">将发送美团券密码至手机号：138****7297</p>
       <div class="postOrder">
-        <el-button class="orderBtn" size="normal" type="primary">提交提单</el-button>
+        <el-button class="orderBtn" size="normal" type="primary" @click="postOrder">提交提单</el-button>
       </div>
     </div>
   </div>
@@ -30,6 +30,7 @@ export default {
   components: {},
   data() {
     return {
+      id: '',
       list: []
     };
   },
@@ -42,7 +43,24 @@ export default {
       return total;
     }
   },
-  methods: {},
+  methods: {
+    postOrder(){
+      this.$http(api.addOrder, {
+        products: this.list,
+        cartId: this.id
+      }).then(res=>{
+        let data = this.$get(res, 'data', {})
+        if(data.code===0){
+          this.$message.success("创建成功")
+          this.$router.push({
+            name: 'order'
+          })
+        }else{
+          this.$message.error(data.msg || "创建订单失败")
+        }
+      })
+    }
+  },
   async asyncData(ctx){
     let { id } = ctx.query
     let res = await ctx.$axios.get(`/cart/${id}`)
@@ -52,6 +70,7 @@ export default {
         return item
       })
       return {
+        id: id,
         list: products
       }
     }

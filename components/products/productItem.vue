@@ -4,7 +4,7 @@
       <img :src="data.image" class="image">
     </div>
     <div class="right">
-      <div class="title">{{data.name}}</div>
+      <div class="title" @click="goDetail(data)">{{data.name}}</div>
       <div class="data">
         <div class="rate">
           <el-rate
@@ -36,6 +36,17 @@ export default {
   },
   data(){
     return {
+    }
+  },
+  methods: {
+    goDetail(item){
+      this.$router.push({
+        name: 'pDetail',
+        query: {
+          name: item.name,
+          type: item.type,
+        }
+      })
     }
   },
   mounted(){
@@ -70,6 +81,7 @@ export default {
       color: $font_c;
       font-weight: bold;
       margin-bottom: 15px;
+      cursor: pointer;
     }
     .data{
       margin-bottom: 15px;

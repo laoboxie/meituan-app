@@ -9,6 +9,7 @@
 <script>
 import api from '@/assets/api/apiList'
 import productItem from "@/components/products/productItem"
+import {mapGetters} from "vuex"
 export default {
   components: {
     productItem
@@ -18,6 +19,11 @@ export default {
       keyword: '',
       products: [],
     }
+  },
+  computed: {
+    ...mapGetters(['city']),
+  },
+  watch: {
   },
   methods: {
     async getProducts(){
@@ -37,13 +43,17 @@ export default {
           }
         })
       }
-    }
+    },
+    initPage(){
+      if(this.keyword){
+        this.getProducts()
+      }
+    }    
   },
+
   mounted(){
     this.keyword = this.$route.query.keyword
-    if(this.keyword){
-      this.getProducts()
-    }
+    this.initPage()
   }
 }
 </script>

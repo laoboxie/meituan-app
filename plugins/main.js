@@ -4,3 +4,5 @@ import get from "lodash/get"
 
 Vue.prototype.$http = http
 Vue.prototype.$get = get
+
+

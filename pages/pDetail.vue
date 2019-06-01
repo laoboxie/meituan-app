@@ -26,6 +26,8 @@ export default {
   },
   computed: {
   },
+  watch: {
+  },
   methods: {
   },
   async asyncData(ctx) {

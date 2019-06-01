@@ -15,6 +15,8 @@ import userRouter from './interface/user'
 import searchRouter from './interface/search'
 import RegionRouter from './interface/region'
 import CartRouter from './interface/cart'
+import OrderRouter from './interface/order'
+
 
 const app = new Koa()
 
@@ -32,7 +34,9 @@ app.use(bodyParser({
 app.use(json())
 
 mongoose.connect(db, {
-  useNewUrlParser:true
+  useNewUrlParser: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
 })
 
 app.use(passport.initialize())
@@ -64,6 +68,8 @@ async function start() {
   app.use(searchRouter.routes()).use(searchRouter.allowedMethods())
   app.use(RegionRouter.routes()).use(RegionRouter.allowedMethods())
   app.use(CartRouter.routes()).use(CartRouter.allowedMethods())
+  app.use(OrderRouter.routes()).use(OrderRouter.allowedMethods())
+
 
   app.use((ctx) => {
     ctx.status = 200
